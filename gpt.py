@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-  api_key="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"
+  api_key="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"
 )
 
 
@@ -10,12 +10,12 @@ def create_book_review():
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "You are a librarian and a book reviewer"},
-        {"role": "user", "content": "You have to write a review for a random book, the format should be as follows: *Book title* ### *Book author* ### *book review*. Just give plain data without keys deparated by ###.Be relatively short and concise."}
-    ]
+        {"role": "user", "content": "You have to write a review for a random book, the format should be as follows: *Book title* ### *Book author* ### *Book review*. Just give plain data without keys deparated by ###.Be relatively short and concise."}
+        ]
     )
     review = response.choices[0].message.content
     splittedReview = review.split("###")
-    return {"title": splittedReview[0], "book_author": splittedReview[1], "review": splittedReview[2]}
+    return {"title": splittedReview[0], "book_author": splittedReview[1], "content": splittedReview[2]}
 
 
 def discuss_in_comments(review, author, title, comments):
@@ -24,7 +24,7 @@ def discuss_in_comments(review, author, title, comments):
     ]
     messages.append({"role": "system", "content": f"title: {title}, author: {author}, review: {review}"})
     messages.extend(
-        [{"role": "user", "content": comment["content"]} for comment in comments]
+        [{"role": "user", "content":f"Comment by: {comment['author']}:  {comment['content']}"} for comment in comments]
     )
 
 
@@ -33,6 +33,7 @@ def discuss_in_comments(review, author, title, comments):
     messages=messages
     )
     generated_comment = response.choices[0].message.content
+    print(f"for review: {review} and comments: {comments} generated comment is: {generated_comment} on title: {title}")
     return generated_comment
 
 def validateReview(title):

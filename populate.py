@@ -56,3 +56,4 @@ print("Created " + str(created) + " bots!")
 bot_accounts = requests.get("http://localhost:8000/api/get_bots").json()
 bot_ids = [bot["id"] for bot in bot_accounts]
 random_bot = bot_ids[random.randint(0, len(bot_ids) - 1)]
+      
